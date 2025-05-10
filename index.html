@@ -146,7 +146,80 @@
 <button onclick="checkErgebnis(5)">Antwort prüfen</button>
 <p class="feedback" id="feedbackErgebnis5"></p>
 </div>
-<script></script>
-<script>function addToFormula(zeichen, feldID) { const el = document.getElementById(feldID); el.textContent += zeichen; }
-function resetFormula(feldID) { document.getElementById(feldID).textContent = ''; }</script></body>
+
+<script>
+function addToFormula(zeichen, feldID) {
+  const el = document.getElementById(feldID);
+  el.textContent += zeichen;
+}
+
+function resetFormula(feldID) {
+  document.getElementById(feldID).textContent = '';
+}
+
+// Formellogik – nur wenn Buchstabe links steht
+function checkFormel(i) {
+  const formel = document.getElementById("formel" + i).textContent.replace(/\s+/g, "");
+  const feedback = document.getElementById("feedbackFormel" + i);
+  const erlaubte = {
+    1: ["I=U/R", "I=U÷R"],
+    2: ["U=P/I", "U=P÷I"],
+    3: ["R=U/I", "R=U÷I"],
+    4: ["P=U·I", "P=I·U"],
+    5: ["E=P·t", "E=t·P"]
+  };
+  const videos = {
+    1: "https://www.youtube.com/watch?v=6lCkF6_v2Ik",
+    2: "https://www.youtube.com/watch?v=6aFLfrAERZQ",
+    3: "https://www.youtube.com/watch?v=vFtobV1cNAs",
+    4: "https://www.youtube.com/watch?v=Eq2tZdJ7NAM",
+    5: "https://www.youtube.com/watch?v=FqHXRk1Hh6E"
+  };
+
+  if (erlaubte[i].includes(formel)) {
+    feedback.textContent = "Richtig!";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "Falsch. <a href='" + videos[i] + "' target='_blank'>Hier kannst du dein Wissen auffrischen</a>";
+    feedback.style.color = "red";
+  }
+}
+
+function checkErgebnis(i) {
+  const val = document.getElementById("ergebnis" + i).value.toLowerCase().replace(/\s+/g, '').replace(',', '.');
+  const erlaubt = {
+    1: ["4", "4a", "4ampere"],
+    2: ["5", "5v", "5volt"],
+    3: ["3", "3ohm", "3Ω"],
+    4: ["15", "15w", "15watt"],
+    5: ["300", "300j", "300joule"]
+  };
+  const feedback = document.getElementById("feedbackErgebnis" + i);
+  if (erlaubt[i].includes(val)) {
+    feedback.textContent = "Richtig!";
+    feedback.style.color = "green";
+  } else {
+    feedback.textContent = "Leider nicht korrekt.";
+    feedback.style.color = "red";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  for (let i = 1; i <= 5; i++) {
+    const feld = document.getElementById("eingabe" + i);
+    const feedback = document.getElementById("feedbackGesucht" + i);
+    const buchstaben = {1: "I", 2: "U", 3: "R", 4: "P", 5: "E"};
+    feld.addEventListener("input", function() {
+      const val = feld.value.trim();
+      if (val === buchstaben[i]) {
+        feedback.textContent = "Richtig!";
+        feedback.style.color = "green";
+      } else {
+        feedback.textContent = "Falsch. Gesucht ist: " + buchstaben[i];
+        feedback.style.color = "red";
+      }
+    });
+  }
+});
+</script></body>
 </html>
